@@ -6,11 +6,10 @@ import { useReducer, useEffect } from 'react';
 /**
  * Internal dependencies
  */
-import { Datetime } from '../../../../eventEditor/data/types';
-import { DatesSortedBy, DisplayDates, ShowDates } from '../../../../eventEditor/data/date/types';
-
-import filters from '../../../../shared/predicates/datetimes/filters';
-import sorters from '../../../../shared/predicates/datetimes/sorters';
+import { Datetime } from '../../../../data/types';
+import { DatesSortedBy, DisplayDates, ShowDates } from '../../../../data/date/types';
+import filters from '../../../../../shared/predicates/datetimes/filters';
+import sorters from '../../../../../shared/predicates/datetimes/sorters';
 
 interface DatesListFilterState {
 	dates: Datetime[];
@@ -40,7 +39,7 @@ const useDatesListFilterState = (dates: Datetime[]): DatesListFilterState => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		// console.log('useDatesListFilterState >>>', state);
+		console.log('useDatesListFilterState >>>', state);
 	}, [state]);
 
 	const setDatesSortedBy = (datesSortedBy: DatesSortedBy) => {
@@ -80,8 +79,8 @@ interface Action {
 }
 
 const reducer = (state, action: Action) => {
-	let processedDates = [];
 	const { datesSortedBy, displayDates, showDates } = action;
+	let processedDates = [];
 
 	switch (action.type) {
 		case ActionType.SET_DATES_SORTED_BY:

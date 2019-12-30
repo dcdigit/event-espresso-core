@@ -1,3 +1,9 @@
+/**
+ * Internal dependencies
+ */
+import { Ticket } from '../../../../eventEditor/data/types';
+import { ShowTickets } from '../../../../eventEditor/data/ticket/types';
+
 import archivedOnly from './archivedOnly';
 import expiredOnly from './expiredOnly';
 import nextOnSaleOrPendingOnly from './nextOnSaleOrPendingOnly';
@@ -11,7 +17,7 @@ import soldOutOnly from './soldOutOnly';
 export const now = new Date();
 
 interface FilterTickets {
-	tickets: any[];
+	tickets: Ticket[];
 	show?: string;
 }
 
@@ -25,30 +31,30 @@ interface FilterTickets {
  */
 const filters = ({ tickets, show = 'on-sale-and-pending' }: FilterTickets) => {
 	switch (show) {
-		case 'all':
-			return tickets;
-		case 'on-sale-and-pending':
-			return onSaleAndPending(tickets);
-		case 'on-sale-only':
-			return onSaleOnly(tickets);
-		case 'pending-only':
-			return pendingOnly(tickets);
-		case 'next-on-sale-or-pending-only':
-			return nextOnSaleOrPendingOnly(tickets);
-		case 'sold-out-only':
-			return soldOutOnly(tickets);
-		case 'above-90-sold':
-			return percentSoldAtOrAbove({ maxQuantity: 90, tickets });
-		case 'above-75-sold':
-			return percentSoldAtOrAbove({ maxQuantity: 75, tickets });
-		case 'above-50-sold':
+		case ShowTickets.above50Sold:
 			return percentSoldAtOrAbove({ maxQuantity: 50, tickets });
-		case 'below-50-sold':
-			return percentSoldBelow({ maxQuantity: 50, tickets });
-		case 'expired-only':
-			return expiredOnly(tickets);
-		case 'archived-only':
+		case ShowTickets.above75Sold:
+			return percentSoldAtOrAbove({ maxQuantity: 75, tickets });
+		case ShowTickets.above90Sold:
+			return percentSoldAtOrAbove({ maxQuantity: 90, tickets });
+		case ShowTickets.all:
+			return tickets;
+		case ShowTickets.archivedOnly:
 			return archivedOnly(tickets);
+		case ShowTickets.below50Sold:
+			return percentSoldBelow({ maxQuantity: 50, tickets });
+		case ShowTickets.expiredOnly:
+			return expiredOnly(tickets);
+		case ShowTickets.nextOnSaleOrPendingOnly:
+			return nextOnSaleOrPendingOnly(tickets);
+		case ShowTickets.onSaleAndPending:
+			return onSaleAndPending(tickets);
+		case ShowTickets.onSaleOnly:
+			return onSaleOnly(tickets);
+		case ShowTickets.pendingOnly:
+			return pendingOnly(tickets);
+		case ShowTickets.soldOutOnly:
+			return soldOutOnly(tickets);
 	}
 	return tickets;
 };

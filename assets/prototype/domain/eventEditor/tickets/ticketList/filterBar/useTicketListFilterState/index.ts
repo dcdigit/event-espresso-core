@@ -1,4 +1,19 @@
-import { useReducer, useEffect } from '@wordpress/element';
+/**
+ * External dependencies
+ */
+import { useReducer, useEffect } from 'react';
+
+/**
+ * Internal dependencies
+ */
+import filters from '../../../../../shared/predicates/tickets/filters';
+
+enum ActionType {
+	SET_DISPLAY_TICKET_DATE = 'SET_DISPLAY_TICKET_DATE',
+	SET_SHOW_TICKETS = 'SET_SHOW_TICKETS',
+	SET_TICKETS_SORTED_BY = 'SET_TICKETS_SORTED_BY',
+	TOGGLE_IS_CHAINED = 'TOGGLE_IS_CHAINED',
+}
 
 const useTicketListFilterState = () => {
 	const initialState = {
@@ -15,14 +30,14 @@ const useTicketListFilterState = () => {
 
 	const setDisplayTicketDate = (displayTicketDate) => {
 		dispatch({
-			type: 'SET_DISPLAY_TICKET_DATE',
+			type: ActionType.SET_DISPLAY_TICKET_DATE,
 			displayTicketDate,
 		});
 	};
 
 	const setShowTickets = (showTickets) => {
 		dispatch({
-			type: 'SET_SHOW_TICKETS',
+			type: ActionType.SET_SHOW_TICKETS,
 			showTickets,
 		});
 	};
@@ -30,39 +45,43 @@ const useTicketListFilterState = () => {
 	const setTicketsSortedBy = (ticketsSortedBy) => {
 		dispatch({
 			ticketsSortedBy,
-			type: 'SET_TICKETS_SORTEDBY',
+			type: ActionType.SET_TICKETS_SORTED_BY,
 		});
 	};
 
 	const toggleIsChained = () => {
 		dispatch({
-			type: 'TOGGLE_IS_CHAINED',
+			type: ActionType.TOGGLE_IS_CHAINED,
 		});
 	};
 
 	return {
-		displayTicketDate: state.displayTicketDate,
-		isChained: state.isChained,
+		...state,
 		setDisplayTicketDate,
 		setShowTickets,
 		setTicketsSortedBy,
-		showTickets: state.showTickets,
-		ticketsSortedBy: state.ticketsSortedBy,
 		toggleIsChained,
 	};
 };
 
+interface Action {
+	type: ActionType;
+}
+
 const reducer = (state, action) => {
 	const { displayTicketDate, showTickets, ticketsSortedBy } = action;
+	let processedDates = [];
 
 	switch (action.type) {
-		case 'SET_DISPLAY_TICKET_DATE':
+		case ActionType.SET_DISPLAY_TICKET_DATE:
 			return { ...state, displayTicketDate };
-		case 'SET_SHOW_TICKETS':
-			return { ...state, showTickets };
-		case 'SET_TICKETS_SORTEDBY':
+		case ActionType.SET_SHOW_TICKETS:
+			processedDates = filters({ tickets: state.tickets, show: showTickets });
+
+			return { ...state, processedDates, showTickets };
+		case ActionType.SET_TICKETS_SORTED_BY:
 			return { ...state, ticketsSortedBy };
-		case 'TOGGLE_IS_CHAINED':
+		case ActionType.TOGGLE_IS_CHAINED:
 			return { ...state, isChained: !state.isChained };
 
 		default:

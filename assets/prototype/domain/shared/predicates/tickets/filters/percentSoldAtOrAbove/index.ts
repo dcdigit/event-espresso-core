@@ -1,4 +1,4 @@
-import validFiniteQuantity from './validFiniteQuantity';
+import validFiniteQuantity from '../validFiniteQuantity';
 
 type PercentSoldAtOrAboveProps = {
 	maxQuantity: number;
